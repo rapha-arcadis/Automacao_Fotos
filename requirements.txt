@@ -1,0 +1,16 @@
+﻿# Pacote: Data
+pandas
+numpy
+openpyxl
+
+# Pacote: DEV
+black
+jupyterblack
+jupyter
+ipykernel
+pyinstaller
+
+# Pacote: Design
+customtkinter
+pillow
+
