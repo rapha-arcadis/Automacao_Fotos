@@ -36,7 +36,7 @@ ctk.set_default_color_theme(resource_path("theme/arcadis_theme.json"))
 class App(ctk.CTk):
     """Main UI orchestrator. Blind to business logic and APIs."""
 
-    def __init__(self, process_service, client_list):
+    def __init__(self, process_service):
         super().__init__()
 
         self.geometry("550x480")
@@ -81,7 +81,6 @@ class App(ctk.CTk):
         # O botão submit está encapsulado dentro do formulário
         self.client_form = ClientDataForm(
             master=self.conteudo_wrapper,
-            client_list=client_list,
             submit_command=self.validate_and_submit,
         )
         self.client_form.pack(fill="x", pady=(0, 20))
@@ -93,19 +92,23 @@ class App(ctk.CTk):
 
     def validate_and_submit(self):
         paths = self.path_selector.get_paths()
+        
+        # Pega a escolha do formulário (Imagens ou Videos)
+        form_data = self.client_form.get_data() 
+        
+        # Validações corrigidas (agora checando o Excel também)
         if not paths["input_path"]:
-            messagebox.showwarning(
-                "Aviso",
-                "Por favor, selecione o arquivo Excel de entrada antes de continuar.",
-            )
+            messagebox.showwarning("Aviso", "Por favor, selecione o diretório de entrada.")
+            return
+        if not paths["excel_path"]: 
+            messagebox.showwarning("Aviso", "Por favor, selecione o arquivo Excel de entrada antes de continuar.")
             return
         if not paths["base_path"]:
-            messagebox.showwarning(
-                "Aviso", "Por favor, selecione o diretório de saída antes de continuar."
-            )
+            messagebox.showwarning("Aviso", "Por favor, selecione o diretório de saída.")
             return
 
-        kwargs_etl = {**paths}
+        # Junta os caminhos com o tipo de conversão escolhido
+        kwargs_etl = {**paths, "tipo_conversao": form_data["matrix_name"]} 
 
         # UI Lock (Trava os formulários e botões)
         self.client_form.lock()

@@ -5,7 +5,7 @@ class ClientDataForm(ctk.CTkFrame):
     """Component that holds the form fields and the submit action."""
 
     # Recebe o submit_command que virá do App.py
-    def __init__(self, master, client_list, submit_command, **kwargs):
+    def __init__(self, master, submit_command, **kwargs):
         super().__init__(
             master,
             fg_color=("#FFB786", "#F49A5E"),

@@ -1,49 +1,50 @@
-import os
-import sys
-import time
+import customtkinter as ctk
 
-# Importa a interface que criamos no arquivo App.py
-from App import App
+# Importa a interface diretamente da raiz
+from App import App 
 
+from Scripts.PhotoManager import PhotoManager
+from Scripts.VideoManager import VideoManager 
 
-def logica_de_negocio_falsa(**kwargs):
+def orquestrador_de_processamento(input_path, excel_path, base_path, tipo_conversao, progress_callback=None):
     """
-    (MOCK) Simula o processamento de dados.
-    Ele finge que está trabalhando por 3 segundos e retorna um caminho de sucesso.
+    Controla o fluxo de dados entre a Interface e as Regras de Negócio.
     """
+    try:
+        if progress_callback:
+            progress_callback(0.1, f"Iniciando conversão de {tipo_conversao}...")
 
-    # Pausa de 3 segundos só para você conseguir ver a barra de progresso animando na tela
-    time.sleep(3)
+        # Instancia a classe correta baseada no ComboBox
+        if tipo_conversao == "Imagens":
+            manager = PhotoManager(input_path, excel_path, base_path)
+            
+            if progress_callback:
+                progress_callback(0.4, "Lendo fotos e cruzando com o Excel...")
+            
+            manager.rename_photos()
+            
+        elif tipo_conversao == "Videos":
+            manager = VideoManager(input_path, excel_path, base_path)
+            
+            if progress_callback:
+                progress_callback(0.4, "Lendo vídeos e cruzando com o Excel...")
+                
+            manager.rename_videos()
+        
+        else:
+            raise ValueError("Tipo de conversão desconhecido!")
 
-    # Retorna um caminho de mentira para o App tentar "abrir a pasta" no final
-    caminho_falso = os.path.abspath("C:/Pasta_Simulada/Resultado.xlsx")
-    return caminho_falso
+        if progress_callback:
+            progress_callback(1.0, "Processamento concluído com sucesso!")
 
+        return base_path
 
-def buscar_dados_iniciais_falsos() -> list:
-    """
-    (MOCK) Simula uma requisição à API para buscar a lista de clientes.
-    Assim o seu ComboBox/Dropdown não fica vazio na hora de testar a tela.
-    """
-
-    lista_simulada = [
-        "Arcadis Brasil",
-        "Vale S.A.",
-        "Petrobras",
-        "Braskem",
-        "Anglo American",
-    ]
-
-    return lista_simulada
-
+    except Exception as e:
+        raise Exception(f"Falha ao processar {tipo_conversao}: {str(e)}")
 
 if __name__ == "__main__":
+    ctk.set_appearance_mode("light")
 
-    # 1. Coleta os dados de mentira (Mocks)
-    lista_clientes = buscar_dados_iniciais_falsos()
-
-    # 2. Instancia o App e injeta a função falsa e a lista
-    app = App(process_service=logica_de_negocio_falsa, client_list=lista_clientes)
-
-    # 3. Roda a tela para você visualizar!
+    # Inicia o App injetando apenas o serviço (sem a lista de clientes)
+    app = App(process_service=orquestrador_de_processamento)
     app.mainloop()
