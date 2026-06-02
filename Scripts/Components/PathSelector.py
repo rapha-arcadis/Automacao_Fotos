@@ -70,7 +70,7 @@ class PathSelector(ctk.CTkFrame):
         self.divider1.grid(row=0, column=1, sticky="ns", pady=2)
 
         self.btn_center = ctk.CTkButton(
-            self, 
+            self,
             text="Selecionar Excel",
             image=self.icon_up_grey,
             compound="bottom",
@@ -146,7 +146,6 @@ class PathSelector(ctk.CTkFrame):
         self.btn_left.configure(image=self.icon_up_grey, fg_color="transparent")
         self.btn_center.configure(image=self.icon_up_grey, fg_color="transparent")
         self.btn_right.configure(image=self.icon_down_grey, fg_color="transparent")
-
 
     def lock(self):
         self.btn_left.configure(state="disabled")
