@@ -43,8 +43,6 @@ def orquestrador_de_processamento(input_path, excel_path, base_path, tipo_conver
         raise Exception(f"Falha ao processar {tipo_conversao}: {str(e)}")
 
 if __name__ == "__main__":
-    ctk.set_appearance_mode("light")
-
-    # Inicia o App injetando apenas o serviço (sem a lista de clientes)
+    # Inicia o App injetando apenas o serviço
     app = App(process_service=orquestrador_de_processamento)
     app.mainloop()
