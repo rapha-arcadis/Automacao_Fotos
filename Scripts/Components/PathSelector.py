@@ -107,9 +107,8 @@ class PathSelector(ctk.CTkFrame):
         self.btn_right.grid(row=0, column=4, sticky="nsew", padx=(0, 2), pady=2)
 
     def _select_file(self):
-        path = filedialog.askopenfilename(
-            title="Selecione o arquivo Excel",
-            filetypes=[("Excel", "*.xlsx *.xls *.xlsm")],
+        path = filedialog.askdirectory(
+            title="Selecione o diretório de entrada"
         )
         if path:
             self.input_path = path
