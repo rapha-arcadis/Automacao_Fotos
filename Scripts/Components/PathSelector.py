@@ -107,9 +107,7 @@ class PathSelector(ctk.CTkFrame):
         self.btn_right.grid(row=0, column=4, sticky="nsew", padx=(0, 2), pady=2)
 
     def _select_file(self):
-        path = filedialog.askdirectory(
-            title="Selecione o diretório de entrada"
-        )
+        path = filedialog.askdirectory(title="Selecione o diretório de entrada")
         if path:
             self.input_path = path
             self.btn_left.configure(fg_color="#409699")
