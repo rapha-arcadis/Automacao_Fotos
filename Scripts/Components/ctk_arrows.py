@@ -1,6 +1,7 @@
 import customtkinter
 from PIL import Image
 
+
 class Arrows:
     def __init__(self):
         
