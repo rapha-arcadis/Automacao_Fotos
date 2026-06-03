@@ -11,7 +11,7 @@ class VideoManager:
     ):
 
         self.list_video = Path(list_video)
-        self.excel_ids = pd.read_excel(excel_ids, sheet_name="base imagens (valores)")
+        self.excel_ids = pd.read_excel(excel_ids, sheet_name="base videos (valores)")
         self.saida = Path(saida)
 
         # Diretório raiz: onde o .exe está ou onde o script .py está
