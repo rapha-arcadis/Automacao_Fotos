@@ -14,7 +14,7 @@ class PhotoManager:
         self.excel_ids = pd.read_excel(excel_ids, sheet_name="base imagens (valores)")
         self.saida = Path(saida)
 
-        # Diretório raiz: onde o .exe está OU onde o script .py está
+        # Diretório raiz: onde o .exe está ou onde o script .py está
         if getattr(sys, "frozen", False):
             self.base_dir = Path(sys.executable).parent
         else:
