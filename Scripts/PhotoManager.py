@@ -55,8 +55,9 @@ class PhotoManager:
 
         # Caso existam arquivos sem correspondência
         tem_nao_correspondidos = False
-        if not df_sem_correspondencia.empty:
+        txt_path = None
 
+        if not df_sem_correspondencia.empty:
             tem_nao_correspondidos = True
 
             # Caminho do relatório TXT de inconsistências

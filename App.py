@@ -18,15 +18,31 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-def abrir_diretorio(caminho_arquivo):
+def abrir_pasta(caminho_pasta):
+    """
+    Abre o diretório no explorador de arquivos.
+    """
+    caminho_pasta = os.path.abspath(caminho_pasta)
+    if sys.platform.startswith("win"):
+        os.startfile(caminho_pasta)
+    elif sys.platform.startswith("darwin"):
+        subprocess.Popen(["open", caminho_pasta])
+    else:
+        subprocess.Popen(["xdg-open", caminho_pasta])
+
+
+def abrir_arquivo_no_explorer(caminho_arquivo):
+    """
+    Abre o explorador e seleciona/destaca o arquivo específico.
+    """
     caminho_arquivo = os.path.abspath(caminho_arquivo)
-    pasta = os.path.dirname(caminho_arquivo)
     if sys.platform.startswith("win"):
         subprocess.Popen(["explorer", "/select,", caminho_arquivo])
     elif sys.platform.startswith("darwin"):
-        subprocess.Popen(["open", pasta])
+        subprocess.Popen(["open", "-R", caminho_arquivo])
     else:
-        subprocess.Popen(["xdg-open", pasta])
+        # Linux: abre a pasta que contém o arquivo
+        subprocess.Popen(["xdg-open", os.path.dirname(caminho_arquivo)])
 
 
 ctk.set_appearance_mode("light")
@@ -213,18 +229,14 @@ class App(ctk.CTk):
                 if houve_arquivos_perdidos:
                     messagebox.showwarning(
                         "Aviso",
-                        "Processamento concluído, mas alguns arquivos não tinham correspondência no Excel!\n\n"
+                        "Processamento concluído, mas alguns arquivos não tinham "
+                        "correspondência no Excel!\n\n"
                         "O arquivo 'arquivos_sem_correspondencia.txt' foi gerado.",
                     )
-                    abrir_diretorio(resultado["txt_path"])
-                else:
-                    messagebox.showinfo(
-                        "Sucesso",
-                        "Todos os arquivos foram mapeados, renomeados e exportados com sucesso!",
-                    )
+                    abrir_arquivo_no_explorer(resultado["txt_path"])  # destaca o .txt
 
-                # Abre o diretório onde os arquivos (e o TXT, se existir) foram salvos
-                abrir_diretorio(diretorio_saida)
+                # Abre o diretório onde os arquivos foram salvos
+                abrir_pasta(diretorio_saida)
 
                 # Reseta os campos de caminho para uma nova execução
                 self.path_selector.reset()
