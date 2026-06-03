@@ -1,5 +1,3 @@
-import customtkinter as ctk
-
 # Importa a interface diretamente da raiz
 from App import App
 
