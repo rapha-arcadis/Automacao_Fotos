@@ -7,10 +7,10 @@ from pathlib import Path
 
 class VideoManager:
     def __init__(
-        self, list_images: str | Path, excel_ids: str | Path, saida: str | Path
+        self, list_video: str | Path, excel_ids: str | Path, saida: str | Path
     ):
 
-        self.list_images = Path(list_images)
+        self.list_video = Path(list_video)
         self.excel_ids = pd.read_excel(excel_ids, sheet_name="base imagens (valores)")
         self.saida = Path(saida)
 
@@ -24,7 +24,7 @@ class VideoManager:
         """
         Retorna um Dataframe dos nomes dos arquivos do diretório.
         """
-        files = [files.name for files in self.list_images.iterdir() if files.is_file()]
+        files = [files.name for files in self.list_video.iterdir() if files.is_file()]
 
         return pd.DataFrame(files, columns=["fulcrum_id_video"])
 
@@ -85,13 +85,13 @@ class VideoManager:
         for i, (_, row) in enumerate(df_merged.iterrows(), start=1):  # 🆕 enumerate
 
             # Caminho completo do arquivo original
-            arquivo_original = self.list_images / row["fulcrum_id_video_dir"]
+            arquivo_original = self.list_video / row["fulcrum_id_video_dir"]
 
             # Mantém a extensão original do arquivo
             extensao = arquivo_original.suffix
 
             # Monta o novo nome utilizando o valor do Excel
-            new_name = f"{row['nome final imagens']}{extensao}"
+            new_name = f"{row['nome final videos']}{extensao}"
 
             # Caminho final do arquivo renomeado
             arquivo_saida = self.saida / new_name
