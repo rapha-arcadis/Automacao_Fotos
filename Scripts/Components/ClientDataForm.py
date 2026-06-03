@@ -2,7 +2,9 @@ import customtkinter as ctk
 
 
 class ClientDataForm(ctk.CTkFrame):
-    """Component that holds the form fields and the submit action."""
+    """
+    Component that holds the form fields and the submit action.
+    """
 
     # Recebe o submit_command que virá do App.py
     def __init__(self, master, submit_command, **kwargs):
@@ -18,7 +20,7 @@ class ClientDataForm(ctk.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
 
-        # --- Coluna 0: Tipo de conversão (Label e ComboBox) ---
+        # Label e combobox
         self.opcoes = ["Imagens", "Videos"]
         self.label_tipo = ctk.CTkLabel(
             self, text="Tipo de conversão", font=("Arial", 12, "bold")
@@ -31,7 +33,7 @@ class ClientDataForm(ctk.CTkFrame):
         # Helper to open dropdown on click
         self.entry_tipo._entry.bind("<Button-1>", lambda e: self.entry_tipo._clicked())
 
-        # --- Coluna 1: Botão Submit ---
+        # Botão Submit
         self.btn_submit = ctk.CTkButton(
             self,
             text="Submit",
@@ -45,7 +47,7 @@ class ClientDataForm(ctk.CTkFrame):
         """Returns all text inputs as a dictionary."""
         return {"matrix_name": self.entry_tipo.get()}
 
-    # Centralizamos o travamento do form e do botão no mesmo lugar
+    # Travamento enquanto processa
     def lock(self):
         self.entry_tipo.configure(state="disabled")
         self.btn_submit.configure(text="Processando...", state="disabled")

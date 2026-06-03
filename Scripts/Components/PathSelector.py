@@ -14,7 +14,9 @@ def resource_path(relative_path):
 
 
 class PathSelector(ctk.CTkFrame):
-    """Component handling file and directory selections with visual feedback."""
+    """
+    Component handling file and directory selections with visual feedback.
+    """
 
     def __init__(self, master, **kwargs):
         super().__init__(
@@ -40,7 +42,7 @@ class PathSelector(ctk.CTkFrame):
             size=(30, 30),
         )
 
-        # ── Grid: 5 colunas (btn | div | btn | div | btn) ───────────
+        # Grid: 5 colunas (btn | div | btn | div | btn)
         self.grid_columnconfigure(0, weight=1)  # botão esquerdo
         self.grid_columnconfigure(1, weight=0)  # divisor 1
         self.grid_columnconfigure(2, weight=1)  # botão central

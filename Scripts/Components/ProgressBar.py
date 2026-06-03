@@ -3,10 +3,14 @@ import customtkinter
 
 class ProgressBar(customtkinter.CTkFrame):
     def __init__(self, master, **kwargs):
-        # Transparent frame to inherit the application's background color
         super().__init__(master, fg_color="transparent", **kwargs)
 
-        # Status label visual settings
+        self._current_value = 0.0
+        self._target_value = 0.0
+        self._animation_id = None
+        self._step = 0.015  # incremento por frame
+        self._interval_ms = 25  # ms entre frames (~40 fps)
+
         self.status_label = customtkinter.CTkLabel(
             self,
             text="Aguardando arquivos...",
@@ -15,27 +19,64 @@ class ProgressBar(customtkinter.CTkFrame):
         )
         self.status_label.pack(anchor="w")
 
-        # Progress bar visual settings
         self.progressbar = customtkinter.CTkProgressBar(
             self, height=10, progress_color="#E4610F"
         )
         self.progressbar.pack(fill="x")
         self.progressbar.set(0)
 
-    # State methods
+    def update_progress(self, target_value):
+        """
+        Define o valor-alvo e inicia a animação suave até ele.
+        """
+        self._target_value = min(max(target_value, 0.0), 1.0)
+        # Só inicia o loop se não tiver um rodando
+        if self._animation_id is None:
+            self._animate()
+
+    def _animate(self):
+        """
+        Loop interno: incrementa a barra até alcançar o target.
+        """
+        if self._current_value < self._target_value:
+            # Calcula o passo dinâmico (mais rápido perto do alvo)
+            remaining = self._target_value - self._current_value
+            step = max(self._step, remaining * 0.08)
+
+            self._current_value = min(
+                self._current_value + step,
+                self._target_value,
+            )
+            self.progressbar.set(self._current_value)
+            self._animation_id = self.after(self._interval_ms, self._animate)
+        else:
+            # Garante o valor exato no final e para o loop
+            self._current_value = self._target_value
+            self.progressbar.set(self._current_value)
+            self._animation_id = None
+
+    def _cancel_animation(self):
+        """
+        Cancela qualquer animação pendente.
+        """
+        if self._animation_id is not None:
+            self.after_cancel(self._animation_id)
+            self._animation_id = None
+
     def set_processing(self):
+        self._cancel_animation()
+        self._current_value = 0.0
+        self._target_value = 0.0
+        self.progressbar.set(0)
         self.status_label.configure(
             text="Lendo e formatando dados...",
             text_color="#E4610F",
             font=("FS Elliot Pro", 12, "bold"),
         )
-        self.progressbar.set(0)
-
-    def update_progress(self, value):
-        self.progressbar.set(value)
-        return self.progressbar.get()
 
     def set_success(self):
+        self._cancel_animation()
+        self._current_value = 1.0
         self.progressbar.set(1)
         self.status_label.configure(
             text="Concluído com sucesso!",
@@ -44,6 +85,8 @@ class ProgressBar(customtkinter.CTkFrame):
         )
 
     def set_file_open(self):
+        self._cancel_animation()
+        self._current_value = 0.0
         self.progressbar.set(0)
         self.status_label.configure(
             text="Operação cancelada (Arquivo em uso).",
@@ -52,6 +95,8 @@ class ProgressBar(customtkinter.CTkFrame):
         )
 
     def set_error(self):
+        self._cancel_animation()
+        self._current_value = 0.0
         self.progressbar.set(0)
         self.status_label.configure(
             text="Erro no processamento.",
@@ -60,6 +105,9 @@ class ProgressBar(customtkinter.CTkFrame):
         )
 
     def reset(self):
+        self._cancel_animation()
+        self._current_value = 0.0
+        self._target_value = 0.0
         self.progressbar.set(0)
         self.status_label.configure(
             text="Aguardando arquivo...",
