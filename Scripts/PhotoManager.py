@@ -79,10 +79,10 @@ class PhotoManager:
         # Realiza o merge entre os arquivos do diretório e os dados do Excel
         df_merged = df_photos.merge(df_excel, on="chave", suffixes=("_dir", "_excel"))
 
-        total = len(df_merged)  # 🆕 total de arquivos a processar
+        total = len(df_merged)
 
         # Percorre cada linha correspondente encontrada
-        for i, (_, row) in enumerate(df_merged.iterrows(), start=1):  # 🆕 enumerate
+        for i, (_, row) in enumerate(df_merged.iterrows(), start=1):
 
             # Caminho completo do arquivo original
             arquivo_original = self.list_images / row["fulcrum_id_foto_dir"]
