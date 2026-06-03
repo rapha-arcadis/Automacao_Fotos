@@ -21,7 +21,7 @@ class ClientDataForm(ctk.CTkFrame):
         self.grid_columnconfigure(1, weight=1)
 
         # Label e combobox
-        self.opcoes = ["Imagens", "Videos"]
+        self.opcoes = ["Imagens"]
         self.label_tipo = ctk.CTkLabel(
             self, text="Tipo de conversão", font=("Arial", 12, "bold")
         )
