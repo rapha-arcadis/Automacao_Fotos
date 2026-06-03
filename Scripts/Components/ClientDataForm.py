@@ -21,7 +21,7 @@ class ClientDataForm(ctk.CTkFrame):
         self.grid_columnconfigure(1, weight=1)
 
         # Label e combobox
-        self.opcoes = ["Imagens"]
+        self.opcoes = ["Imagens", "Videos"]
         self.label_tipo = ctk.CTkLabel(
             self, text="Tipo de conversão", font=("Arial", 12, "bold")
         )
@@ -44,7 +44,9 @@ class ClientDataForm(ctk.CTkFrame):
         self.btn_submit.grid(row=1, column=1, sticky="ew", padx=(10, 20), pady=(0, 20))
 
     def get_data(self):
-        """Returns all text inputs as a dictionary."""
+        """
+        Returns all text inputs as a dictionary.
+        """
         return {"matrix_name": self.entry_tipo.get()}
 
     # Travamento enquanto processa
