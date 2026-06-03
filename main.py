@@ -12,7 +12,9 @@ def orquestrador_de_processamento(
         if progress_callback:
             progress_callback(0.05, f"Iniciando conversão de {tipo_conversao}...")
 
+        # Variáveis para armazenar o resultado do Manager
         tem_nao_correspondidos = False
+        txt_path = None
 
         # Faixa reservada para o processamento pesado: 0.10 → 0.95
         PROGRESS_START = 0.10
@@ -33,9 +35,10 @@ def orquestrador_de_processamento(
                 progress_callback(
                     PROGRESS_START, "Analisando imagens e cruzando dados..."
                 )
-            tem_nao_correspondidos = manager.rename_photos(
-                progress_callback=file_progress
-            )
+            resultado_manager = manager.rename_photos(progress_callback=file_progress)
+            # Extrai corretamente os dados do dicionário
+            tem_nao_correspondidos = resultado_manager["tem_nao_correspondidos"]
+            txt_path = resultado_manager.get("txt_path")
 
         elif tipo_conversao == "Videos":
             manager = VideoManager(input_path, excel_path, base_path)
@@ -43,9 +46,10 @@ def orquestrador_de_processamento(
                 progress_callback(
                     PROGRESS_START, "Analisando vídeos e cruzando dados..."
                 )
-            tem_nao_correspondidos = manager.rename_videos(
-                progress_callback=file_progress
-            )
+            resultado_manager = manager.rename_videos(progress_callback=file_progress)
+            # Extrai corretamente os dados do dicionário
+            tem_nao_correspondidos = resultado_manager["tem_nao_correspondidos"]
+            txt_path = resultado_manager.get("txt_path")
 
         else:
             raise ValueError("Tipo de conversão desconhecido!")
@@ -53,9 +57,11 @@ def orquestrador_de_processamento(
         if progress_callback:
             progress_callback(1.0, "Processamento finalizado.")
 
+        # Agora retornamos a estrutura exata que o App.py espera
         return {
             "base_path": base_path,
             "tem_nao_correspondidos": tem_nao_correspondidos,
+            "txt_path": txt_path,
         }
 
     except Exception as e:
@@ -63,6 +69,5 @@ def orquestrador_de_processamento(
 
 
 if __name__ == "__main__":
-    # Inicia o App injetando apenas o serviço
     app = App(process_service=orquestrador_de_processamento)
     app.mainloop()

@@ -1,7 +1,6 @@
 ﻿# Pacote: Data
 pandas
 numpy
-openpyxl
 
 # Pacote: DEV
 black
