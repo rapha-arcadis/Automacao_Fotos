@@ -103,4 +103,7 @@ class PhotoManager:
                 progress_callback(i, total)
 
         # Retorna se houve arquivos sem correspondência
-        return tem_nao_correspondidos
+        return {
+            "tem_nao_correspondidos": tem_nao_correspondidos,
+            "txt_path": str(txt_path) if txt_path else None,
+        }

@@ -52,7 +52,7 @@ class PathSelector(ctk.CTkFrame):
 
         self.btn_left = ctk.CTkButton(
             self,
-            text="Escolher Diretório",
+            text="Diretório de arquivos",
             image=self.icon_up_grey,
             compound="bottom",
             height=100,

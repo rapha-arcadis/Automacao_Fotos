@@ -214,8 +214,9 @@ class App(ctk.CTk):
                     messagebox.showwarning(
                         "Aviso",
                         "Processamento concluído, mas alguns arquivos não tinham correspondência no Excel!\n\n"
-                        "O arquivo 'arquivos_sem_correspondencia.txt' foi gerado na pasta de destino.",
+                        "O arquivo 'arquivos_sem_correspondencia.txt' foi gerado.",
                     )
+                    abrir_diretorio(resultado["txt_path"])
                 else:
                     messagebox.showinfo(
                         "Sucesso",
