@@ -1,3 +1,4 @@
+import re
 import sys
 import shutil
 import pandas as pd
@@ -34,11 +35,11 @@ class PhotoManager:
         """
         return self.excel_ids.iloc[:, [3, 4]]
 
-    def rename_photos(self, progress_callback=None) -> bool:
+    def rename_photos(self, progress_callback=None) -> dict:
         """
         Cruza os nomes do diretório com o Excel, renomeia/copia os arquivos
         e gera um relatório TXT caso existam arquivos sem correspondência.
-        Retorna True se houver pendências, False se tudo bateu com o Excel.
+        Retorna um dicionário com o status de pendências e o caminho do txt.
         """
         df_photos = self.list_photos()
         df_excel = self.list_ids()
@@ -65,7 +66,6 @@ class PhotoManager:
 
             # Cria o arquivo TXT contendo os arquivos não encontrados no Excel
             with open(txt_path, "w", encoding="utf-8") as f:
-
                 f.write("=== ARQUIVOS NÃO ENCONTRADOS NO EXCEL ===\n")
                 f.write(
                     f"Total de arquivos sem correspondência: "
@@ -91,7 +91,11 @@ class PhotoManager:
             extensao = arquivo_original.suffix
 
             # Monta o novo nome utilizando o valor do Excel
-            new_name = f"{row['nome final imagens']}{extensao}"
+            nome_sujo = str(row["nome final imagens"]).strip()
+            # Substitui caracteres proibidos no Windows e quebras de linha por um underline (_)
+            nome_limpo = re.sub(r'[\\/*?:"<>|\n\r]', "_", nome_sujo)
+
+            new_name = f"{nome_limpo}{extensao}"
 
             # Caminho final do arquivo renomeado
             arquivo_saida = self.saida / new_name
